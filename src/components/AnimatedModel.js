@@ -1,58 +1,42 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useGLTF, useAnimations } from '@react-three/drei'
+import React, { useEffect, useRef } from 'react'
+            import { useGLTF, useAnimations } from '@react-three/drei'
+            import { LoopRepeat } from 'three'
 
-/**
- * AnimatedModel Component
- *
- * This component renders a 3D model with animations using the `@react-three/drei` library.
- * It supports playing the first animation on a click event.
- *
- * @param {Object} props - The component props.
- * @param {string} props.path - The path to the GLTF model file.
- * @param {Array<number>} [props.position=[0, 0, 0]] - The position of the model in the 3D scene.
- * @param {Array<number>} [props.scale=[1, 1, 1]] - The scale of the model in the 3D scene.
- *
- * @returns {JSX.Element} The rendered 3D model with animations.
- */
-export function AnimatedModel({ path, position = [0, 0, 0], scale = [1, 1, 1] }) {
-    // Reference to the group containing the 3D model
-    const group = useRef()
+            /**
+             * Composant AnimatedModel
+             *
+             * Ce composant rend un modèle 3D animé dans une scène React Three Fiber.
+             * Il charge un fichier GLTF, applique une animation en boucle infinie, et permet
+             * de positionner, redimensionner et faire pivoter le modèle.
+             *
+             * @param {Object} props - Les propriétés du composant.
+             * @param {string} props.path - Le chemin vers le fichier GLTF du modèle.
+             * @param {Array<number>} [props.position=[0, 0, 0]] - La position du modèle dans la scène 3D.
+             * @param {Array<number>} [props.scale=[1, 1, 1]] - L'échelle du modèle dans la scène 3D.
+             * @param {Array<number>} [props.rotation=[0, 0, 0]] - La rotation du modèle dans la scène 3D.
+             *
+             * @returns {JSX.Element} Le modèle 3D animé.
+             */
+            export function AnimatedModel({ path }) {
+                const group = useRef()
+                const { scene, animations } = useGLTF(path)
+                const { actions } = useAnimations(animations, group)
 
-    // Load the GLTF model and its animations
-    const { scene, animations } = useGLTF(path)
+                useEffect(() => {
+                    if (actions && Object.values(actions).length > 0) {
+                        const firstAction = Object.values(actions)[0]
+                        firstAction.reset().play()
+                    }
+                }, [actions])
 
-    // Extract animation actions from the loaded animations
-    const { actions } = useAnimations(animations, group)
-
-    // State to track if the animation has been played
-    const [played, setPlayed] = useState(false)
-
-    /**
-     * Handles the click event on the model.
-     * Plays the first animation if it hasn't been played yet.
-     */
-    const handleClick = () => {
-        console.log('Clicked!')
-        if (!played && actions) {
-            const firstAction = Object.values(actions)[0]
-            if (firstAction) {
-                firstAction.reset().fadeIn(0.3).play()
-                setPlayed(true)
+                return (
+                    <group
+                        ref={group}
+                        position={[-0.5, 13, -2]}   // valeurs fixes
+                        scale={[8, 8, 8]}           // valeurs fixes
+                        rotation={[-0.2, 0, 0]}     // valeurs fixes
+                    >
+                        <primitive object={scene} dispose={null} />
+                    </group>
+                )
             }
-        }
-    }
-
-    /**
-     * Logs the available animation actions to the console whenever they change.
-     */
-    useEffect(() => {
-        console.log('Available actions:', Object.keys(actions || {}))
-    }, [actions])
-
-    // Render the 3D model and attach the click handler
-    return (
-        <group ref={group} onClick={handleClick}>
-            <primitive object={scene} position={position} scale={scale} dispose={null} />
-        </group>
-    )
-}

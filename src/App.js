@@ -43,14 +43,10 @@ function App() {
           />
 
           {/* Modèle animé */}
-          <AnimatedModel
-              path="/models/seraphim.glb"
-              position={[-0.5, 13, -2]}
-              scale={[8, 8, 8]}
-              rotation={[-0.2, 0, 0]} // incliné légèrement vers l’avant
-          />
+            <AnimatedModel path="/models/seraphim.glb" />
 
-          {/* Contrôle caméra */}
+
+            {/* Contrôle caméra */}
           <OrbitControls />
         </Canvas>
       </div>
