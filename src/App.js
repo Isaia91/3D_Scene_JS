@@ -134,7 +134,7 @@ import React from "react";
                 <div style={{ width: "100vw", height: "100vh" }}>
                     {/* Leva affiche le panneau (collapsed pour ne pas gêner au chargement) */}
                     <Leva collapsed />
-                    <Canvas shadows camera={{ position: [0, 8, 15], fov: 50 }}>
+                    <Canvas shadows camera={{ position: [0, 20, 70], fov: 50 }}>
                         <Scene />
                     </Canvas>
                 </div>
