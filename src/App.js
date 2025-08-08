@@ -7,7 +7,6 @@ import React from "react";
         import { useThree } from "@react-three/fiber";
         import { useEffect } from "react";
         import { Leva, useControls, folder } from "leva";
-        import { MeshReflectorMaterial } from "@react-three/drei";
 
         /**
          * Composant Ground.
@@ -135,7 +134,7 @@ import React from "react";
                 <div style={{ width: "100vw", height: "100vh" }}>
                     {/* Leva affiche le panneau (collapsed pour ne pas gêner au chargement) */}
                     <Leva collapsed />
-                    <Canvas shadows camera={{ position: [0, 2, 8], fov: 50 }}>
+                    <Canvas shadows camera={{ position: [0, 8, 15], fov: 50 }}>
                         <Scene />
                     </Canvas>
                 </div>
