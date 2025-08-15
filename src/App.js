@@ -1,4 +1,4 @@
-import React from "react";
+import React,{ Suspense } from "react";
         import { Canvas } from "@react-three/fiber";
         import { OrbitControls } from "@react-three/drei";
         import { Model } from "./components/Model";
@@ -7,8 +7,11 @@ import React from "react";
         import { useThree } from "@react-three/fiber";
         import { useEffect } from "react";
         import { Leva, useControls, folder } from "leva";
+import { Html, useProgress, Loader } from "@react-three/drei";
 
-        /**
+
+
+/**
          * Composant Ground.
          *
          * Ce composant rend un sol noir dans la scène 3D.
@@ -49,7 +52,28 @@ import React from "react";
             );
         }
 
-        /**
+function MyLoader() {
+    const { progress } = useProgress();
+
+    return (
+        <Html center>
+            <div style={{
+                color: 'white',
+                fontSize: '1.5rem',
+                fontFamily: 'sans-serif',
+                textAlign: 'center',
+                background: 'rgba(0, 0, 0, 0.6)',
+                padding: '1rem 2rem',
+                borderRadius: '10px'
+            }}>
+                Chargement... {progress.toFixed(0)}%
+            </div>
+        </Html>
+    );
+}
+
+
+/**
          * Composant Scene.
          *
          * Ce composant configure et rend la scène 3D avec des lumières, un sol noir,
@@ -132,11 +156,13 @@ import React from "react";
         export default function App() {
             return (
                 <div style={{ width: "100vw", height: "100vh" }}>
-                    {/* Leva affiche le panneau (collapsed pour ne pas gêner au chargement) */}
                     <Leva collapsed />
                     <Canvas shadows camera={{ position: [0, 20, 70], fov: 50 }}>
-                        <Scene />
+                        <Suspense fallback={<MyLoader />}>
+                            <Scene />
+                        </Suspense>
                     </Canvas>
+                    <Loader />
                 </div>
             );
         }
